@@ -109,3 +109,77 @@ The current Chromium test suite has **10 passing tests** in the local environmen
 [Sauce Demo](https://www.saucedemo.com/)
 
 This is a portfolio and learning project for demonstrating software testing and automation practices.
+
+
+## AI-Assisted Test Generation and Failure Analysis
+
+This project includes local AI capabilities powered by Ollama and the Qwen2.5-Coder model.
+
+### AI Test Generator
+
+The test generator converts a plain-English testing requirement into Playwright TypeScript code.
+
+**Workflow:**
+1. Provide a testing requirement.
+2. Ollama generates Playwright test code.
+3. The generator saves the output to `ai/generated-tests/login-page.spec.ts`.
+4. Review the generated code.
+5. Execute the test with Playwright and verify the result.
+
+Run the generator:
+
+```bash
+npx tsx ai/test-generator.ts
+```
+
+Provide a custom requirement:
+
+```bash
+npx tsx ai/test-generator.ts "Verify that the Sauce Demo login page displays the username and password fields."
+```
+
+Run the generated test:
+
+```bash
+npx playwright test ai/generated-tests/login-page.spec.ts --project=chromium
+```
+
+### AI Failure Analyzer
+
+The failure analyzer uses the local AI model to explain a Playwright failure, identify a likely root cause, and suggest corrective actions.
+
+Example:
+
+```bash
+npx tsx ai/failure-analyzer.ts "Playwright test failed: locator was not found."
+```
+
+The analyzer provides a likely cause, supporting evidence, recommended fixes, and a code example when sufficient information is available.
+
+### Local AI Setup
+
+1. Install [Ollama](https://ollama.com/download).
+2. Download the model:
+
+   ```bash
+   ollama run qwen2.5-coder:7b
+   ```
+
+3. Install the project dependencies:
+
+   ```bash
+   npm ci
+   npm install --save-dev tsx
+   ```
+
+4. Ensure Ollama is available locally at `http://localhost:11434`.
+
+**Important:** The AI scripts require Ollama running on the local machine. The AI features are separate from the existing UI/API test suites and are not automatically executed by GitHub Actions.
+
+### Safety and Limitations
+
+- Review AI-generated code before executing it.
+- Generated tests may contain incorrect selectors or assertions.
+- AI failure analysis provides suggestions, not guaranteed root causes.
+- The generator saves output to a dedicated folder and does not automatically execute generated code.
+- Local model performance depends on available system resources.
