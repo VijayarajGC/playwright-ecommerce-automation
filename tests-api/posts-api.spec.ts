@@ -1,10 +1,10 @@
 
 import { test, expect } from '@playwright/test';
-
-const apiBaseUrl = 'https://jsonplaceholder.typicode.com';
+import { PostsApi } from '../api/PostsApi';
 
 test('GET /posts/1 returns a valid post', async ({ request }) => {
-  const response = await request.get(`${apiBaseUrl}/posts/1`);
+  const postsApi = new PostsApi(request);
+  const response = await postsApi.getPost(1);
 
   expect(response.status()).toBe(200);
 
@@ -21,7 +21,8 @@ test('GET /posts/1 returns a valid post', async ({ request }) => {
 });
 
 test('GET /posts returns a collection of posts', async ({ request }) => {
-  const response = await request.get(`${apiBaseUrl}/posts`);
+  const postsApi = new PostsApi(request);
+  const response = await postsApi.getPosts();
 
   expect(response.status()).toBe(200);
 
@@ -37,9 +38,9 @@ test('GET /posts returns a collection of posts', async ({ request }) => {
   });
 });
 
-
 test('GET /posts/999999 returns 404 for a nonexistent post', async ({ request }) => {
-  const response = await request.get(`${apiBaseUrl}/posts/999999`);
+  const postsApi = new PostsApi(request);
+  const response = await postsApi.getPost(999999);
 
   expect(response.status()).toBe(404);
 });
