@@ -44,3 +44,50 @@ test('GET /posts/999999 returns 404 for a nonexistent post', async ({ request })
 
   expect(response.status()).toBe(404);
 });
+
+test('GET /posts returns a JSON content type', async ({ request }) => {
+  const postsApi = new PostsApi(request);
+  const response = await postsApi.getPosts();
+
+  expect(response.status()).toBe(200);
+  expect(response.headers()['content-type']).toContain('application/json');
+});
+
+test('GET /posts?userId=1 returns only posts for that user', async ({ request }) => {
+  const postsApi = new PostsApi(request);
+  const response = await postsApi.getPostsByUser(1);
+
+  expect(response.status()).toBe(200);
+
+  const posts = await response.json();
+
+  expect(Array.isArray(posts)).toBe(true);
+  expect(posts.length).toBeGreaterThan(0);
+
+  for (const post of posts) {
+    expect(post.userId).toBe(1);
+  }
+});
+
+test('POST /posts creates a post and returns the submitted data', async ({ request }) => {
+  const postsApi = new PostsApi(request);
+
+  const newPost = {
+    title: 'Playwright API testing',
+    body: 'Testing POST requests with Playwright and TypeScript',
+    userId: 1,
+  };
+
+  const response = await postsApi.createPost(
+    newPost.title,
+    newPost.body,
+    newPost.userId,
+  );
+
+  expect(response.status()).toBe(201);
+
+  const createdPost = await response.json();
+
+  expect(createdPost).toMatchObject(newPost);
+  expect(createdPost.id).toEqual(expect.any(Number));
+});
