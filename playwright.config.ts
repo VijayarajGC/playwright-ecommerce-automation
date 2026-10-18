@@ -25,13 +25,19 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
 
   // Generate the HTML report
-  reporter: 'html',
+  reporter: [
+  ['list'],
+  ['html', { open: 'never' }],
+],
 
   // Shared browser and page settings
   use: {
-    baseURL: 'https://www.saucedemo.com',
-    trace: 'on-first-retry',
-  },
+  baseURL: 'https://www.saucedemo.com',
+
+  screenshot: 'only-on-failure',
+  video: 'retain-on-failure',
+  trace: 'retain-on-failure',
+},
 
   // Browser projects
   projects: [
