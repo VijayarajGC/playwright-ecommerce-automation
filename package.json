@@ -1,10 +1,23 @@
+
 {
   "name": "projectqa",
   "version": "1.0.0",
-  "description": "",
+  "description": "Playwright UI and API test automation portfolio project",
   "main": "index.js",
-  "scripts": {},
-  "keywords": [],
+  "scripts": {
+    "test": "playwright test",
+    "test:chromium": "playwright test --project=chromium",
+    "test:ui": "playwright test tests --project=chromium",
+    "test:api": "playwright test tests-api --project=chromium",
+    "report": "playwright show-report"
+  },
+  "keywords": [
+    "playwright",
+    "typescript",
+    "test-automation",
+    "api-testing",
+    "qa"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
